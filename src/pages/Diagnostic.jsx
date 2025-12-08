@@ -1,36 +1,49 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom' // ✅ for navigation
+import { useNavigate } from 'react-router-dom'
 
-export default function Diagnostic() {
+export default function Diagnostic({ darkMode }) {
   const navigate = useNavigate()
 
+  const MACHINE_ID = "AGV-TK-2025-001"
+  const SOFTWARE_VERSION = "Taikisha Hybrid v1.0.3"
+
   const diagnostics = [
+    `🆔 Machine ID: ${MACHINE_ID}`,
+    `💽 Software Version: ${SOFTWARE_VERSION}`,
     '🔋 Battery status: OK',
     '⚙️ Motors: Running',
     '📡 Sensors: Active',
   ]
 
+  // Theme colors
+  const containerBg = darkMode ? "#1a1a1a" : "#f4f8fc"
+  const cardBg = darkMode ? "#2b2b2b" : "#fff"
+  const titleColor = darkMode ? "#aad8ff" : "#005baa"
+  const itemBg = darkMode ? "#3a3a3a" : "#f1f6fb"
+  const itemColor = darkMode ? "#eee" : "#333"
+  const buttonBg = darkMode ? "linear-gradient(135deg, #005baa, #004080)" : "linear-gradient(135deg, #0077cc, #005baa)"
+
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>🛠️ Robot Diagnostics</h2>
+    <div style={{ ...styles.container, background: containerBg }}>
+      <div style={{ ...styles.card, background: cardBg }}>
+        <h2 style={{ ...styles.title, color: titleColor }}>🛠️ Robot Diagnostics</h2>
 
         {/* Diagnostics list */}
         <ul style={styles.list}>
           {diagnostics.map((d, i) => (
-            <li key={i} style={styles.item}>{d}</li>
+            <li key={i} style={{ ...styles.item, background: itemBg, color: itemColor }}>{d}</li>
           ))}
         </ul>
 
-        {/* Buttons section */}
+        {/* Buttons */}
         <div style={styles.buttonGroup}>
-          <button style={styles.button} onClick={() => navigate('/architecture')}>
+          <button style={{ ...styles.button, background: buttonBg }} onClick={() => navigate('/architecture')}>
             🌐 Network Architecture
           </button>
-          <button style={styles.button} onClick={() => navigate('/servo-diagnostic')}>
+          <button style={{ ...styles.button, background: buttonBg }} onClick={() => navigate('/servo-diagnostic')}>
             ⚙️ Servo Diagnostic
           </button>
-          <button style={styles.button} onClick={() => navigate('/io-diagnostic')}>
+          <button style={{ ...styles.button, background: buttonBg }} onClick={() => navigate('/io-diagnostic')}>
             📊 IO Diagnostic
           </button>
         </div>
@@ -45,11 +58,9 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'flex-start',
     paddingTop: '40px',
-    background: '#f4f8fc',
     minHeight: '80vh'
   },
   card: {
-    background: '#fff',
     padding: '30px',
     borderRadius: '12px',
     boxShadow: '0 6px 16px rgba(0, 91, 170, 0.2)',
@@ -58,7 +69,6 @@ const styles = {
   },
   title: {
     fontSize: '22px',
-    color: '#005baa',
     marginBottom: '20px',
     textAlign: 'center'
   },
@@ -70,10 +80,8 @@ const styles = {
   item: {
     padding: '12px',
     marginBottom: '10px',
-    background: '#f1f6fb',
     borderRadius: '8px',
     fontSize: '16px',
-    color: '#333',
     boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.05)'
   },
   buttonGroup: {
@@ -83,7 +91,6 @@ const styles = {
   },
   button: {
     padding: '12px',
-    background: 'linear-gradient(135deg, #0077cc, #005baa)',
     color: '#fff',
     border: 'none',
     borderRadius: '8px',

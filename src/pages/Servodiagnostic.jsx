@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function ServoDiagnostic() {
+export default function ServoDiagnostic({ darkMode = false }) {
   const leftMotor = {
     status: "Running",
     mode: "Auto",
@@ -21,46 +21,35 @@ export default function ServoDiagnostic() {
     faultCode: "E-102",
   };
 
+  const containerBg = darkMode ? "#121212" : "#f4f8fc";
+  const cardBg = darkMode ? "#1e1e1e" : "#fff";
+  const textColor = darkMode ? "#ffffff" : "#005baa";
+  const labelBg = darkMode ? "#2a2a2a" : "#f1f6fb";
+  const valueColor = darkMode ? "#ddd" : "#333";
+  const boxShadow = darkMode
+    ? "0 6px 16px rgba(0, 0, 0, 0.7)"
+    : "0 6px 16px rgba(0, 91, 170, 0.2)";
+
   const renderTable = (title, data) => (
-    <div style={styles.tableCard}>
-      <h3 style={styles.tableTitle}>{title}</h3>
+    <div style={{ ...styles.tableCard, background: cardBg, boxShadow }}>
+      <h3 style={{ ...styles.tableTitle, color: textColor }}>{title}</h3>
       <table style={styles.table}>
         <tbody>
-          <tr>
-            <td style={styles.label}>Status</td>
-            <td style={styles.value}>{data.status}</td>
-          </tr>
-          <tr>
-            <td style={styles.label}>Mode</td>
-            <td style={styles.value}>{data.mode}</td>
-          </tr>
-          <tr>
-            <td style={styles.label}>Actual Position</td>
-            <td style={styles.value}>{data.actualPosition}</td>
-          </tr>
-          <tr>
-            <td style={styles.label}>Position Error</td>
-            <td style={styles.value}>{data.positionError}</td>
-          </tr>
-          <tr>
-            <td style={styles.label}>Actual Speed</td>
-            <td style={styles.value}>{data.actualSpeed}</td>
-          </tr>
-          <tr>
-            <td style={styles.label}>Motor Temp</td>
-            <td style={styles.value}>{data.motorTemp}</td>
-          </tr>
-          <tr>
-            <td style={styles.label}>Fault Code</td>
-            <td style={styles.value}>{data.faultCode}</td>
-          </tr>
+          {Object.entries(data).map(([key, value], i) => (
+            <tr key={i}>
+              <td style={{ ...styles.label, background: labelBg, color: textColor }}>
+                {key.replace(/([A-Z])/g, " $1")}
+              </td>
+              <td style={{ ...styles.value, color: valueColor }}>{value}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
 
   return (
-    <div style={styles.container}>
+    <div style={{ ...styles.container, background: containerBg }}>
       {renderTable("Left Motor (LH)", leftMotor)}
       {renderTable("Right Motor (RH)", rightMotor)}
     </div>
@@ -74,22 +63,19 @@ const styles = {
     gap: "20px",
     padding: "20px",
     flexWrap: "wrap",
-    background: "#f4f8fc",
     minHeight: "80vh",
   },
   tableCard: {
-    background: "#fff",
     borderRadius: "12px",
-    boxShadow: "0 6px 16px rgba(0, 91, 170, 0.2)",
     padding: "20px",
     minWidth: "320px",
     flex: "1",
   },
   tableTitle: {
     textAlign: "center",
-    color: "#005baa",
     marginBottom: "15px",
     fontSize: "18px",
+    fontWeight: "600",
   },
   table: {
     width: "100%",
@@ -98,14 +84,12 @@ const styles = {
   label: {
     padding: "10px",
     fontWeight: "600",
-    background: "#f1f6fb",
     borderBottom: "1px solid #ddd",
     width: "50%",
   },
   value: {
     padding: "10px",
     borderBottom: "1px solid #ddd",
-    color: "#333",
     width: "50%",
   },
 };

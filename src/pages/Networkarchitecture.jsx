@@ -1,11 +1,16 @@
 import React from "react";
-import ArchitectureImg from "../assets/architectureuagv.png"; // ✅ adjust path if needed
+import ArchitectureImg from "../assets/Amrdevelopmentarchitecture.jpg"; // ✅ adjust path if needed
 
-export default function Architecture() {
+export default function Architecture({ darkMode }) {
+  const cardBg = darkMode ? "#1f1f1f" : "#fff";
+  const containerBg = darkMode ? "#121212" : "#f4f8fc";
+  const textColor = darkMode ? "#aad8ff" : "#005baa";
+  const boxShadow = darkMode ? "0 6px 16px rgba(0, 0, 0, 0.7)" : "0 6px 16px rgba(0, 91, 170, 0.2)";
+
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}> System Architecture</h2>
+    <div style={{ ...styles.container, background: containerBg }}>
+      <div style={{ ...styles.card, background: cardBg, boxShadow }}>
+        <h2 style={{ ...styles.title, color: textColor }}> System Architecture</h2>
         <img 
           src={ArchitectureImg} 
           alt="System Architecture" 
@@ -21,20 +26,16 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     padding: "30px",
-    background: "#f4f8fc",
     minHeight: "80vh",
   },
   card: {
-    background: "#fff",
     borderRadius: "12px",
     padding: "25px",
-    boxShadow: "0 6px 16px rgba(0, 91, 170, 0.2)",
     width: "100%",
     maxWidth: "1000px",
     textAlign: "center",
   },
   title: {
-    color: "#005baa",
     marginBottom: "20px",
     fontSize: "22px",
     fontWeight: "bold",

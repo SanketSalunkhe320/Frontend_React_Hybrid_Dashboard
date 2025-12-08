@@ -1,41 +1,48 @@
 import React, { useState } from 'react'
 
-export default function ManualOp() {
+export default function ManualOp({ darkMode }) {
   const [direction, setDirection] = useState('')
   const [roller, setRoller] = useState('')
   const [turnTable, setTurnTable] = useState('')
   const [popup, setPopup] = useState('')
 
+  // Theme colors
+  const bgColor = darkMode ? "#1a1a1a" : "#f4f8fc"
+  const cardBg = darkMode ? "#2b2b2b" : "#fff"
+  const textColor = darkMode ? "#eee" : "#333"
+  const buttonBg = darkMode ? "linear-gradient(145deg, #005baa, #004080)" : "linear-gradient(145deg, #0077cc, #005baa)"
+  const buttonShadow = darkMode
+    ? "0 3px 6px rgba(0,0,0,0.5), inset 0 -2px 4px rgba(0,0,0,0.6)"
+    : "0 3px 6px rgba(0,0,0,0.25), inset 0 -2px 4px rgba(0,0,0,0.3)"
+
   return (
-    <div style={styles.container}>
+    <div style={{ ...styles.container, background: bgColor, color: textColor }}>
       <div style={styles.wrapper}>
         {/* Joystick */}
-        <div style={styles.card}>
-          <h3 style={styles.title}>🎮 Manual Operation</h3>
+        <div style={{ ...styles.card, background: cardBg }}>
+          <h3 style={{ ...styles.title, color: textColor }}>🎮 Manual Operation</h3>
           <div style={styles.joystick}>
             <div style={styles.row}>
-              <button style={styles.button} onClick={() => setDirection('Up')}>⬆️</button>
+              <button style={{ ...styles.button, background: buttonBg, boxShadow: buttonShadow }} onClick={() => setDirection('Up')}>⬆️</button>
             </div>
             <div style={styles.row}>
-              <button style={styles.button} onClick={() => setDirection('Left')}>⬅️</button>
-              <button style={styles.button} onClick={() => setDirection('Down')}>⬇️</button>
-              <button style={styles.button} onClick={() => setDirection('Right')}>➡️</button>
+              <button style={{ ...styles.button, background: buttonBg, boxShadow: buttonShadow }} onClick={() => setDirection('Left')}>⬅️</button>
+              <button style={{ ...styles.button, background: buttonBg, boxShadow: buttonShadow }} onClick={() => setDirection('Down')}>⬇️</button>
+              <button style={{ ...styles.button, background: buttonBg, boxShadow: buttonShadow }} onClick={() => setDirection('Right')}>➡️</button>
             </div>
           </div>
-          <p style={styles.status}>Current: <strong>{direction || 'None'}</strong></p>
+          <p style={{ ...styles.status, color: textColor }}>Current: <strong>{direction || 'None'}</strong></p>
         </div>
 
         {/* Pop-up */}
-        <div style={styles.card}>
-          <h3 style={styles.title}>⬆️⬇️ Actuator</h3>
+        <div style={{ ...styles.card, background: cardBg }}>
+          <h3 style={{ ...styles.title, color: textColor }}>⬆️⬇️ Actuator</h3>
           <div style={styles.row}>
-            <button style={styles.button} onClick={() => setPopup('Up')}>⬆️ Up</button>
-            <button style={styles.button} onClick={() => setPopup('Down')}>⬇️ Down</button>
+            <button style={{ ...styles.button, background: buttonBg, boxShadow: buttonShadow }} onClick={() => setPopup('Up')}>⬆️ Up</button>
+            <button style={{ ...styles.button, background: buttonBg, boxShadow: buttonShadow }} onClick={() => setPopup('Down')}>⬇️ Down</button>
           </div>
-          <p style={styles.status}>Actuator: <strong>{popup || 'Neutral'}</strong></p>
+          <p style={{ ...styles.status, color: textColor }}>Actuator: <strong>{popup || 'Neutral'}</strong></p>
         </div>
-
-      
       </div>
     </div>
   )
@@ -43,7 +50,6 @@ export default function ManualOp() {
 
 const styles = {
   container: {
-    background: '#f4f8fc',
     minHeight: '30vh',
     padding: '15px',
     display: 'flex',
@@ -57,7 +63,6 @@ const styles = {
     maxWidth: '1000px'
   },
   card: {
-    background: '#fff',
     padding: '15px',
     borderRadius: '10px',
     boxShadow: '0 4px 10px rgba(0, 91, 170, 0.15)',
@@ -65,7 +70,6 @@ const styles = {
   },
   title: {
     fontSize: '16px',
-    color: '#005baa',
     marginBottom: '10px'
   },
   joystick: {
@@ -87,25 +91,12 @@ const styles = {
     fontSize: '14px',
     borderRadius: '8px',
     border: 'none',
-    background: 'linear-gradient(145deg, #0077cc, #005baa)',
     color: 'white',
     cursor: 'pointer',
-    boxShadow: '0 3px 6px rgba(0,0,0,0.25), inset 0 -2px 4px rgba(0,0,0,0.3)',
     transition: 'all 0.2s ease'
   },
   status: {
     fontSize: '13px',
-    marginTop: '8px',
-    color: '#333'
+    marginTop: '8px'
   }
-}
-
-// Hover/Active
-styles.button[':hover'] = {
-  transform: 'scale(1.05)',
-  background: 'linear-gradient(145deg, #005baa, #004080)'
-}
-styles.button[':active'] = {
-  transform: 'scale(0.92)',
-  boxShadow: 'inset 0 3px 5px rgba(0,0,0,0.35)'
 }

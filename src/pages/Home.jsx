@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
-import Magneticagv from "../assets/Hybrid.png"; // AGV image
+import Magneticagv from "../assets/AMR2.png";
 
 const socket = io("http://localhost:5000");
 
-export default function Home() {
+export default function Home({ darkMode = false }) {
   const [plcData, setPlcData] = useState({
     comm_status: "offline",
     plc_comm_led: false,
@@ -32,13 +32,24 @@ export default function Home() {
     return () => socket.off("plc_status");
   }, []);
 
+  // LED Component
   const Led = ({ status, blink }) => {
     const [visible, setVisible] = useState(true);
+
     useEffect(() => {
       if (!blink) return;
       const interval = setInterval(() => setVisible((v) => !v), 500);
       return () => clearInterval(interval);
     }, [blink]);
+
+    const bgColor = blink
+      ? visible
+        ? "lime"
+        : "#555"
+      : status
+      ? "green"
+      : "red";
+
     return (
       <span
         style={{
@@ -46,37 +57,49 @@ export default function Home() {
           width: "14px",
           height: "14px",
           borderRadius: "50%",
-          backgroundColor: blink
-            ? visible
-              ? "lime"
-              : "#bbb"
-            : status
-            ? "green"
-            : "red",
+          backgroundColor: bgColor,
           boxShadow: status ? "0 0 6px rgba(0,255,0,0.6)" : "none",
         }}
       ></span>
     );
   };
 
-  const handleStartStop = () =>
+  // Control handlers
+  const toggleStartStop = () =>
     socket.emit("toggle_start_stop", { value: !plcData.start_stop });
+  const setMode = (mode) => socket.emit("set_mode", { mode });
 
   const isAuto = plcData.auto_manual === "Auto";
   const isManual = plcData.auto_manual === "Manual";
 
-  return (
-    <div style={styles.container}>
-      <h2 style={styles.heading}>Hybrid AMR Dashboard</h2>
+  // Colors based on dark mode
+  const colors = {
+    bg: darkMode ? "#1a1a1a" : "#fdf9f9",
+    card: darkMode ? "#2b2b2b" : "#fff",
+    text: darkMode ? "#eee" : "#333",
+    heading: darkMode ? "#fff" : "#333",
+  };
 
-      {/* UAGV Image */}
-      <div style={styles.card}>
+  return (
+    <div
+      style={{
+        ...styles.container,
+        backgroundColor: colors.bg,
+        color: colors.text,
+      }}
+    >
+      <h2 style={{ ...styles.heading, color: colors.heading }}>
+        Hybrid AMR Dashboard
+      </h2>
+
+      {/* AGV Image */}
+      <div style={{ ...styles.card, backgroundColor: colors.card }}>
         <img src={Magneticagv} alt="UAGV" style={styles.image} />
       </div>
 
       {/* Interlocks */}
-      <div style={styles.card}>
-        <h3 style={styles.sectionTitle}>Interlocks</h3>
+      <div style={{ ...styles.card, backgroundColor: colors.card }}>
+        <h3 style={{ ...styles.sectionTitle, color: colors.text }}>Interlocks</h3>
         <div style={styles.responsiveTable}>
           <table style={styles.table}>
             <thead>
@@ -101,9 +124,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Motor Speed */}
-      <div style={styles.card}>
-        <h3 style={styles.sectionTitle}>Motor Speeds</h3>
+      {/* Motor Speeds */}
+      <div style={{ ...styles.card, backgroundColor: colors.card }}>
+        <h3 style={{ ...styles.sectionTitle, color: colors.text }}>Motor Speeds</h3>
         <div style={styles.responsiveTable}>
           <table style={styles.table}>
             <thead>
@@ -122,23 +145,59 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Control Buttons */}
-      <div style={styles.card}>
-        <h3 style={styles.sectionTitle}>Controls and Mode Selection</h3>
+      {/* Controls */}
+      <div style={{ ...styles.card, backgroundColor: colors.card }}>
+        <h3 style={{ ...styles.sectionTitle, color: colors.text }}>
+          Controls and Mode Selection
+        </h3>
+
+        {/* Start / Stop */}
         <div style={styles.buttonGroup}>
           <button
             style={{
               ...styles.button,
               background: plcData.start_stop
-                ? "linear-gradient(135deg, #ff4e50, #ff0000)"
+                ? darkMode
+                  ? "linear-gradient(135deg, #ff6666, #ff0000)"
+                  : "linear-gradient(135deg, #ff4e50, #ff0000)"
+                : darkMode
+                ? "linear-gradient(135deg, #28a745, #1e7e34)"
                 : "linear-gradient(135deg, #28a745, #218838)",
             }}
-            onClick={handleStartStop}
+            onClick={toggleStartStop}
           >
             {plcData.start_stop ? "Stop" : "Start"}
           </button>
         </div>
 
+        {/* Auto / Manual */}
+        <div style={styles.modeButtons}>
+          <button
+            style={{
+              ...styles.button,
+              background: darkMode
+                ? "linear-gradient(135deg, #3399ff, #0056b3)"
+                : "linear-gradient(135deg, #007bff, #0056b3)",
+            }}
+            onClick={() => setMode("auto")}
+          >
+            Auto Mode
+          </button>
+
+          <button
+            style={{
+              ...styles.button,
+              background: darkMode
+                ? "linear-gradient(135deg, #ffad33, #cc7700)"
+                : "linear-gradient(135deg, #ff9500, #cc7700)",
+            }}
+            onClick={() => setMode("manual")}
+          >
+            Manual Mode
+          </button>
+        </div>
+
+        {/* LED Indicators */}
         <div style={styles.modeWrapper}>
           <span>Auto Mode:</span>
           <Led status={isAuto} />
@@ -150,6 +209,7 @@ export default function Home() {
   );
 }
 
+// Styles
 const styles = {
   container: {
     width: "100%",
@@ -157,16 +217,15 @@ const styles = {
     margin: "0 auto",
     padding: "10px",
     fontFamily: "Arial, sans-serif",
+    minHeight: "100vh",
   },
   heading: {
     fontSize: "clamp(20px, 2.5vw, 28px)",
     fontWeight: "600",
     marginBottom: "20px",
     textAlign: "center",
-    color: "#333",
   },
   card: {
-    background: "#fff",
     borderRadius: "12px",
     padding: "15px",
     marginBottom: "20px",
@@ -177,7 +236,6 @@ const styles = {
     fontWeight: "500",
     marginBottom: "10px",
     textAlign: "left",
-    color: "#444",
   },
   responsiveTable: {
     overflowX: "auto",
@@ -189,7 +247,6 @@ const styles = {
   },
   buttonGroup: {
     display: "flex",
-    flexWrap: "wrap",
     justifyContent: "center",
     gap: "10px",
     marginBottom: "15px",
@@ -203,7 +260,12 @@ const styles = {
     cursor: "pointer",
     flex: "1 1 auto",
     minWidth: "120px",
-    maxWidth: "200px",
+  },
+  modeButtons: {
+    display: "flex",
+    gap: "12px",
+    justifyContent: "center",
+    marginBottom: "15px",
   },
   modeWrapper: {
     display: "flex",
@@ -211,7 +273,6 @@ const styles = {
     alignItems: "center",
     gap: "12px",
     marginTop: "10px",
-    fontSize: "clamp(14px, 2vw, 16px)",
     flexWrap: "wrap",
   },
   image: {

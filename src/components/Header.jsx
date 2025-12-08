@@ -10,11 +10,13 @@ import {
   FaSignOutAlt,
   FaBars,
   FaTimes,
+  FaMoon,
+  FaSun,
 } from "react-icons/fa";
 import { io } from "socket.io-client";
 import TaikishaLogo from "../assets/Taikishaimage.jpg";
 
-export default function Navbar() {
+export default function Header({ darkMode, setDarkMode }) {
   const [now, setNow] = useState(new Date());
   const [plcOnline, setPlcOnline] = useState(false);
   const [blink, setBlink] = useState(false);
@@ -64,13 +66,21 @@ export default function Navbar() {
     navigate("/animation");
   };
 
+  const toggleDarkMode = () => setDarkMode(!darkMode);
+
   return (
-    <header className="header">
+    <header
+      className="header"
+      style={{
+        background: darkMode ? "#222" : "#005baa",
+        color: darkMode ? "#fff" : "#fff",
+        transition: "all 0.3s",
+      }}
+    >
       <style>{`
         .header {
           display:flex; justify-content:space-between; align-items:center;
-          background:#005baa; color:white; padding:10px 20px;
-          flex-wrap:wrap; position:sticky; top:0; z-index:50;
+          padding:10px 20px; flex-wrap:wrap; position:sticky; top:0; z-index:50;
         }
         .left { display:flex; align-items:center; gap:15px; flex:1; }
         .logo { width:230px; height:60px; }
@@ -78,52 +88,20 @@ export default function Navbar() {
         .title { font-weight:bold; font-size:clamp(14px, 2vw, 18px); }
         .datetime { font-size:clamp(12px, 1.5vw, 14px); opacity:0.9; }
         .plc-dot { display:inline-block; width:16px; height:16px; border-radius:50%; margin-left:5px; }
-
-        /* Desktop Nav */
-        .nav-buttons {
-          display:flex; align-items:center; gap:15px;
-        }
+        .nav-buttons { display:flex; align-items:center; gap:15px; }
         .nav-buttons a, .nav-buttons button {
-          color:white; text-decoration:none;
-          display:flex; align-items:center; gap:6px;
+          color:white; text-decoration:none; display:flex; align-items:center; gap:6px;
           font-size:clamp(13px, 1.8vw, 15px); font-weight:500;
           background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3);
-          border-radius:30px; padding:8px 14px; cursor:pointer;
-          transition:all 0.3s ease; box-shadow:0 2px 5px rgba(0,0,0,0.2);
+          border-radius:30px; padding:8px 14px; cursor:pointer; transition:all 0.3s ease;
         }
         .nav-buttons a:hover, .nav-buttons button:hover {
-          background:linear-gradient(135deg,#0072ff,#00c6ff);
-          border-color:transparent; transform:scale(1.05);
-          box-shadow:0 4px 12px rgba(0,0,0,0.3);
+          background:linear-gradient(135deg,#0072ff,#00c6ff); border-color:transparent; transform:scale(1.05);
         }
-
-        /* Mobile */
         .hamburger { background:none; border:none; font-size:26px; color:white; cursor:pointer; }
-        .mobile-menu {
-          display:flex; flex-direction:column; width:100%;
-          background:#004080; margin-top:8px; padding:10px 0;
-          border-radius:8px;
-        }
-        .mobile-menu a, .mobile-menu button {
-          color:white; text-decoration:none;
-          display:flex; align-items:center; justify-content:center; gap:8px;
-          font-size:clamp(14px, 3.5vw, 18px); font-weight:500;
-          background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3);
-          border-radius:25px; margin:8px 10px; padding:12px;
-          cursor:pointer; transition:all 0.3s ease; box-shadow:0 2px 6px rgba(0,0,0,0.2);
-        }
-        .mobile-menu a:hover, .mobile-menu button:hover {
-          background:linear-gradient(135deg,#0072ff,#00c6ff);
-          border-color:transparent; transform:scale(1.05);
-          box-shadow:0 4px 12px rgba(0,0,0,0.35);
-        }
-
-        @media (max-width: 480px) {
-          .logo { width:150px; }
-          .title { font-size:14px; }
-          .datetime { font-size:12px; }
-          .plc-dot { width:14px; height:14px; }
-        }
+        .mobile-menu { display:flex; flex-direction:column; width:100%; margin-top:8px; padding:10px 0; border-radius:8px; }
+        .mobile-menu a, .mobile-menu button { color:white; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px; font-size:clamp(14px, 3.5vw, 18px); font-weight:500; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3); border-radius:25px; margin:8px 10px; padding:12px; cursor:pointer; transition:all 0.3s ease; }
+        @media (max-width: 480px) { .logo { width:150px; } .title { font-size:14px; } .datetime { font-size:12px; } .plc-dot { width:14px; height:14px; } }
       `}</style>
 
       <div className="left">
@@ -146,6 +124,9 @@ export default function Navbar() {
           <Link to="/report"><FaFileAlt /> Reports</Link>
           <Link to="/diagnostic"><FaTools /> Diagnostics</Link>
           <Link to="/settings"><FaCogs /> Settings</Link>
+          <button onClick={toggleDarkMode}>
+            {darkMode ? <FaSun /> : <FaMoon />} {darkMode ? "Light" : "Dark"}
+          </button>
           <button onClick={handleLogout}><FaSignOutAlt /> Logout</button>
         </nav>
       )}
@@ -163,6 +144,9 @@ export default function Navbar() {
               <Link to="/report" onClick={() => setMenuOpen(false)}><FaFileAlt /> Reports</Link>
               <Link to="/diagnostic" onClick={() => setMenuOpen(false)}><FaTools /> Diagnostics</Link>
               <Link to="/settings" onClick={() => setMenuOpen(false)}><FaCogs /> Settings</Link>
+              <button onClick={() => { toggleDarkMode(); setMenuOpen(false); }}>
+                {darkMode ? <FaSun /> : <FaMoon />} {darkMode ? "Light" : "Dark"}
+              </button>
               <button onClick={() => { setMenuOpen(false); handleLogout(); }}>
                 <FaSignOutAlt /> Logout
               </button>

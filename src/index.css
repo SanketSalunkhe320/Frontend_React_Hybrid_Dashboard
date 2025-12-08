@@ -1,3 +1,37 @@
+/* ============================= */
+/*        THEME VARIABLES        */
+/* ============================= */
+:root {
+  --bg-color: #f4f8fc;
+  --text-color: #333;
+  --card-bg: #fff;
+  --header-bg: linear-gradient(90deg, #005baa, #0077cc);
+  --header-text: #fff;
+  --footer-bg: #005baa;
+  --table-bg: #fff;
+  --table-header-bg: #005baa;
+  --table-row-alt: #f1f6fb;
+  --table-hover: #e6f0fa;
+}
+
+/* ============= DARK MODE ============= */
+body.dark-mode {
+  --bg-color: #0d1117;
+  --text-color: #e6edf3;
+  --card-bg: #161b22;
+  --header-bg: linear-gradient(90deg, #0b3d73, #0a588f);
+  --header-text: #fff;
+  --footer-bg: #0b3d73;
+  --table-bg: #161b22;
+  --table-header-bg: #0b3d73;
+  --table-row-alt: #1c2128;
+  --table-hover: #222830;
+}
+
+/* ============================= */
+/*      GLOBAL STYLES           */
+/* ============================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -9,15 +43,18 @@ body, html, #root {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #f4f8fc;
-  color: #333;
+  background: var(--bg-color);
+  color: var(--text-color);
   user-select: none;
+  transition: background 0.25s ease, color 0.25s ease;
 }
 
-/* Header */
+/* ============================= */
+/*           HEADER              */
+/* ============================= */
 header {
-  background: linear-gradient(90deg, #005baa, #0077cc);
-  color: white;
+  background: var(--header-bg);
+  color: var(--header-text);
   padding: 12px 24px;
   display: flex;
   align-items: center;
@@ -52,15 +89,23 @@ header .right a {
   transition: all 0.2s ease;
 }
 
+body.dark-mode header .right button,
+body.dark-mode header .right a {
+  background: #222830;
+  color: #fff;
+}
+
 header .right button:hover,
 header .right a:hover {
-  background: #e6f0fa;
+  background: var(--table-hover);
   transform: translateY(-2px);
 }
 
-/* Footer */
+/* ============================= */
+/*           FOOTER             */
+/* ============================= */
 footer {
-  background: #005baa;
+  background: var(--footer-bg);
   color: white;
   padding: 12px 24px;
   text-align: right;
@@ -68,38 +113,44 @@ footer {
   margin-top: auto;
 }
 
-/* Table */
+/* ============================= */
+/*           TABLE              */
+/* ============================= */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
-  background: white;
+  background: var(--table-bg);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: background 0.25s ease;
 }
 
 table th, table td {
   padding: 12px;
   text-align: center;
   font-size: 14px;
+  color: var(--text-color);
 }
 
 table th {
-  background: #005baa;
+  background: var(--table-header-bg);
   color: white;
   text-transform: uppercase;
 }
 
 table tr:nth-child(even) {
-  background: #f1f6fb;
+  background: var(--table-row-alt);
 }
 
 table tr:hover {
-  background: #e6f0fa;
+  background: var(--table-hover);
 }
 
-/* Responsive */
+/* ============================= */
+/*          RESPONSIVE          */
+/* ============================= */
 @media (max-width: 768px) {
   header {
     flex-direction: column;

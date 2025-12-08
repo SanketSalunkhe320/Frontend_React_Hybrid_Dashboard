@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 
-export default function AdminPage() {
+export default function AdminPage({ darkMode }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [users, setUsers] = useState([]);
   const [speed, setSpeed] = useState(0);
-
   const [minSpeed, setMinSpeed] = useState(0.1);
   const [maxSpeed, setMaxSpeed] = useState(2.0);
 
@@ -45,21 +44,32 @@ export default function AdminPage() {
     alert(`Maximum AGV Speed set to ${max} m/s`);
   };
 
+  // Theme colors
+  const containerBg = darkMode ? "#1a1a1a" : "#f4f8fc";
+  const cardBg = darkMode ? "#2b2b2b" : "#fff";
+  const titleColor = darkMode ? "#aad8ff" : "#005baa";
+  const subtitleColor = darkMode ? "#ccc" : "#333";
+  const inputBg = darkMode ? "#3a3a3a" : "#fff";
+  const inputColor = darkMode ? "#eee" : "#333";
+  const inputBorder = darkMode ? "1px solid #555" : "1px solid #ccc";
+  const buttonBg = darkMode ? "linear-gradient(135deg, #005baa, #004080)" : "#005baa";
+  const userItemBg = darkMode ? "#3a3a3a" : "#f1f6fb";
+
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>⚙️ Admin Panel</h2>
+    <div style={{ ...styles.container, background: containerBg }}>
+      <div style={{ ...styles.card, background: cardBg }}>
+        <h2 style={{ ...styles.title, color: titleColor }}>⚙️ Admin Panel</h2>
 
         {/* User creation */}
         <div style={styles.section}>
-          <h3 style={styles.subtitle}>👤 Create User</h3>
+          <h3 style={{ ...styles.subtitle, color: subtitleColor }}>👤 Create User</h3>
           <div style={styles.inputGroup}>
             <input
               type="text"
               placeholder="Enter username"
               value={username}
               onChange={e => setUsername(e.target.value)}
-              style={styles.input}
+              style={{ ...styles.input, background: inputBg, color: inputColor, border: inputBorder }}
             />
           </div>
           <div style={styles.inputGroup}>
@@ -68,14 +78,14 @@ export default function AdminPage() {
               placeholder="Enter password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              style={styles.input}
+              style={{ ...styles.input, background: inputBg, color: inputColor, border: inputBorder }}
             />
           </div>
-          <button onClick={createUser} style={styles.button}>Create User</button>
+          <button onClick={createUser} style={{ ...styles.button, background: buttonBg }}>Create User</button>
 
           <ul style={styles.userList}>
             {users.map((u, i) => (
-              <li key={i} style={styles.userItem}>
+              <li key={i} style={{ ...styles.userItem, background: userItemBg, color: inputColor }}>
                 {u.username}
               </li>
             ))}
@@ -84,34 +94,34 @@ export default function AdminPage() {
 
         {/* Setpoints */}
         <div style={styles.section}>
-          <h3 style={styles.subtitle}>🚀 AGV Speed</h3>
+          <h3 style={{ ...styles.subtitle, color: subtitleColor }}>🚀 AGV Speed</h3>
 
           {/* Min Speed */}
           <div style={styles.setpointRow}>
-            <label style={styles.label}>Minimum Speed:</label>
+            <label style={{ ...styles.label, color: subtitleColor }}>Minimum Speed:</label>
             <input
               type="number"
               step="0.1"
               value={minSpeed}
               onChange={e => setMinSpeed(e.target.value)}
-              style={styles.input}
+              style={{ ...styles.input, background: inputBg, color: inputColor, border: inputBorder }}
             />
-            <span style={styles.unit}>m/s</span>
-            <button style={styles.button} onClick={setMinAgvSpeed}>Set</button>
+            <span style={{ ...styles.unit, color: subtitleColor }}>m/s</span>
+            <button style={{ ...styles.button, background: buttonBg }} onClick={setMinAgvSpeed}>Set</button>
           </div>
 
           {/* Max Speed */}
           <div style={styles.setpointRow}>
-            <label style={styles.label}>Maximum Speed:</label>
+            <label style={{ ...styles.label, color: subtitleColor }}>Maximum Speed:</label>
             <input
               type="number"
               step="0.1"
               value={maxSpeed}
               onChange={e => setMaxSpeed(e.target.value)}
-              style={styles.input}
+              style={{ ...styles.input, background: inputBg, color: inputColor, border: inputBorder }}
             />
-            <span style={styles.unit}>m/s</span>
-            <button style={styles.button} onClick={setMaxAgvSpeed}>Set</button>
+            <span style={{ ...styles.unit, color: subtitleColor }}>m/s</span>
+            <button style={{ ...styles.button, background: buttonBg }} onClick={setMaxAgvSpeed}>Set</button>
           </div>
         </div>
       </div>
@@ -149,12 +159,10 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'flex-start',
-    padding: '20px',
-    background: '#f4f8fc',
+    padding: '30px',
     minHeight: '100vh'
   },
   card: {
-    background: '#fff',
     padding: '20px',
     borderRadius: '12px',
     boxShadow: '0 6px 16px rgba(0, 91, 170, 0.2)',
@@ -164,7 +172,6 @@ const styles = {
   title: {
     fontSize: '22px',
     fontWeight: 'bold',
-    color: '#005baa',
     marginBottom: '20px',
     textAlign: 'center'
   },
@@ -174,8 +181,7 @@ const styles = {
   subtitle: {
     fontSize: '18px',
     fontWeight: '600',
-    marginBottom: '12px',
-    color: '#333'
+    marginBottom: '12px'
   },
   inputGroup: {
     display: 'flex',
@@ -193,13 +199,11 @@ const styles = {
   input: {
     flex: 1,
     padding: '10px',
-    border: '1px solid #ccc',
     borderRadius: '6px',
     fontSize: '14px'
   },
   button: {
     padding: '10px 16px',
-    background: '#005baa',
     color: '#fff',
     border: 'none',
     borderRadius: '6px',
@@ -214,7 +218,6 @@ const styles = {
   },
   userItem: {
     padding: '8px 12px',
-    background: '#f1f6fb',
     borderRadius: '6px',
     marginBottom: '6px',
     fontSize: '14px'
@@ -225,8 +228,6 @@ const styles = {
   },
   unit: {
     marginLeft: '6px',
-    color: '#555',
     fontSize: '14px'
   }
 };
-
