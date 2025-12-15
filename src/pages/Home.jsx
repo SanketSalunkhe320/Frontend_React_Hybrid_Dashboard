@@ -27,6 +27,29 @@ export default function Home({ darkMode = false }) {
     },
   });
 
+  // Set global background color on mount and when darkMode changes
+  useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
+    
+    if (darkMode) {
+      root.style.backgroundColor = "#1a1a1a";
+      body.style.backgroundColor = "#1a1a1a";
+      body.style.color = "#eee";
+    } else {
+      root.style.backgroundColor = "#fdf9f9";
+      body.style.backgroundColor = "#fdf9f9";
+      body.style.color = "#333";
+    }
+    
+    // Cleanup function to reset styles
+    return () => {
+      root.style.backgroundColor = "";
+      body.style.backgroundColor = "";
+      body.style.color = "";
+    };
+  }, [darkMode]);
+
   useEffect(() => {
     socket.on("plc_status", (data) => setPlcData(data));
     return () => socket.off("plc_status");
@@ -78,6 +101,7 @@ export default function Home({ darkMode = false }) {
     card: darkMode ? "#2b2b2b" : "#fff",
     text: darkMode ? "#eee" : "#333",
     heading: darkMode ? "#fff" : "#333",
+    shadow: darkMode ? "0 4px 12px rgba(0,0,0,0.4)" : "0 4px 12px rgba(0,0,0,0.1)",
   };
 
   return (
@@ -93,12 +117,12 @@ export default function Home({ darkMode = false }) {
       </h2>
 
       {/* AGV Image */}
-      <div style={{ ...styles.card, backgroundColor: colors.card }}>
+      <div style={{ ...styles.card, backgroundColor: colors.card, boxShadow: colors.shadow }}>
         <img src={Magneticagv} alt="UAGV" style={styles.image} />
       </div>
 
       {/* Interlocks */}
-      <div style={{ ...styles.card, backgroundColor: colors.card }}>
+      <div style={{ ...styles.card, backgroundColor: colors.card, boxShadow: colors.shadow }}>
         <h3 style={{ ...styles.sectionTitle, color: colors.text }}>Interlocks</h3>
         <div style={styles.responsiveTable}>
           <table style={styles.table}>
@@ -125,7 +149,7 @@ export default function Home({ darkMode = false }) {
       </div>
 
       {/* Motor Speeds */}
-      <div style={{ ...styles.card, backgroundColor: colors.card }}>
+      <div style={{ ...styles.card, backgroundColor: colors.card, boxShadow: colors.shadow }}>
         <h3 style={{ ...styles.sectionTitle, color: colors.text }}>Motor Speeds</h3>
         <div style={styles.responsiveTable}>
           <table style={styles.table}>
@@ -146,7 +170,7 @@ export default function Home({ darkMode = false }) {
       </div>
 
       {/* Controls */}
-      <div style={{ ...styles.card, backgroundColor: colors.card }}>
+      <div style={{ ...styles.card, backgroundColor: colors.card, boxShadow: colors.shadow }}>
         <h3 style={{ ...styles.sectionTitle, color: colors.text }}>
           Controls and Mode Selection
         </h3>
@@ -229,7 +253,6 @@ const styles = {
     borderRadius: "12px",
     padding: "15px",
     marginBottom: "20px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
   },
   sectionTitle: {
     fontSize: "clamp(16px, 2vw, 20px)",

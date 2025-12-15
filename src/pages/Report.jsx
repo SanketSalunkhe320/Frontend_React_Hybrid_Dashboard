@@ -1,6 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
-export default function Report({ darkMode }) {
+export default function Report({ darkMode = false }) {
+  // Set global background color
+  useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
+    
+    if (darkMode) {
+      root.style.backgroundColor = "#1a1a1a";
+      body.style.backgroundColor = "#1a1a1a";
+      body.style.color = "#eee";
+    } else {
+      root.style.backgroundColor = "#f4f8fc";
+      body.style.backgroundColor = "#f4f8fc";
+      body.style.color = "#333";
+    }
+    
+    // Cleanup function to reset styles
+    return () => {
+      root.style.backgroundColor = "";
+      body.style.backgroundColor = "";
+      body.style.color = "";
+    };
+  }, [darkMode]);
+
   const generateReport = () => {
     const blob = new Blob([
       "📊 AGV Report: Sample Data\n\n- LCP1: MLS001, Speed 120 rpm\n- LCP2: MLS002, Speed 130 rpm\n- LCP3: MLS003, Speed 110 rpm"
@@ -19,10 +42,22 @@ export default function Report({ darkMode }) {
   const titleColor = darkMode ? "#aad8ff" : "#005baa"
   const subtitleColor = darkMode ? "#ccc" : "#666"
   const buttonBg = darkMode ? "linear-gradient(135deg, #005baa, #004080)" : "#005baa"
+  const shadow = darkMode ? "0 6px 16px rgba(0, 0, 0, 0.4)" : "0 6px 16px rgba(0, 91, 170, 0.2)"
 
   return (
-    <div style={{ ...styles.container, background: containerBg }}>
-      <div style={{ ...styles.card, background: cardBg }}>
+    <div style={{ 
+      ...styles.container, 
+      backgroundColor: containerBg,
+      minHeight: "100vh",
+      width: "100%",
+      position: "relative"
+    }}>
+      <div style={{ 
+        ...styles.card, 
+        backgroundColor: cardBg,
+        boxShadow: shadow,
+        color: darkMode ? "#eee" : "#333"
+      }}>
         <h2 style={{ ...styles.title, color: titleColor }}>📑 AGV Report</h2>
         <p style={{ ...styles.subtitle, color: subtitleColor }}>Generate and download AGV operation reports</p>
         <button 
@@ -43,15 +78,21 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '80vh'
+    padding: "20px",
+    margin: 0,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
   },
   card: {
     padding: '40px 30px',
     borderRadius: '12px',
-    boxShadow: '0 6px 16px rgba(0, 91, 170, 0.2)',
     textAlign: 'center',
     maxWidth: '400px',
-    width: '100%'
+    width: '100%',
+    margin: "20px"
   },
   title: {
     fontSize: '22px',
